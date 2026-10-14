@@ -52,6 +52,20 @@ Langsung jalan setelah `update-frames.bat` dijalankan (frame dibaca dari `js/fra
 Di GitHub Pages frame dibaca langsung dari `assets/frame/` (daftar dari `js/frames.js`). `js/frames-data.js` hanya dipakai saat dibuka lewat file://, jadi pengunjung web tidak mengunduhnya.
 Untuk tes lokal pakai `jalankan-lokal.bat`, Live Server (VS Code), atau `npx serve`.
 
+## Mengganti watermark footer
+Footer saat ini memakai `assets/Footer.png`. Untuk GIF, ubah `src` gambar footer di `index.html` ke file `.gif`.
+Untuk iklan video, ganti elemen `<img>` footer dengan `<video src="assets/Footer.mp4" autoplay muted loop playsinline></video>`.
+Taruh file media di folder `assets/`. Video dibuat mute agar bisa autoplay dan berulang. Ukuran media mengikuti lebar layar
+dan rasio asli file, tanpa batas tinggi CSS atau pemotongan. Jika memakai media yang lebih tinggi, sesuaikan `--footer-space`
+di `css/style.css` agar konten halaman tetap tidak tertutup footer.
+
+## Menambahkan popup iklan/notifikasi
+Taruh gambar PNG atau GIF di `assets/`, lalu ubah `src` gambar pada elemen `#siteNotice` di `index.html`
+(contoh: `assets/iklan.gif`) dan hapus atribut `hidden` dari elemen tersebut agar popup tampil.
+Popup muncul di sisi kanan dan dapat ditutup dengan tombol ×; setelah halaman dimuat ulang, popup tampil kembali.
+Sesuaikan `--notice-width`, `--notice-right`, dan `--notice-top` di `css/style.css` untuk mengatur ukuran dan posisi.
+Posisi `top` adalah titik tengah vertikal popup. Gambar menjaga rasio aslinya dan dibatasi tinggi layar agar tetap terlihat.
+
 ## Kompres
 PNG dicoba dulu. Kalau di atas 2 MB, otomatis jadi JPEG dengan kualitas tertinggi yang masih muat,
 dan kalau masih besar dimensinya dikecilkan bertahap.

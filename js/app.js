@@ -4,6 +4,8 @@
   const MAXZ = 4, MIN_ZOOM = 0.2, PREVIEW_W = 640, BLUR_DEFAULT = 20, BLUR_MAX = 100;
   const ZIP_NAME = "Frame Joomax by Fixs.Arts.zip";
   const HEIC_SRCS = ["js/vendor/heic2any.min.js", "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"];
+  const siteNotice = $("#siteNotice"), siteNoticeClose = $("#siteNoticeClose");
+  if (siteNotice && siteNoticeClose) siteNoticeClose.addEventListener("click", () => { siteNotice.hidden = true; });
   const state = { frames: [], current: 0, per: false, items: [], sel: null };
   const frameIdx = (it) => (state.per ? it.frameIdx : state.current);
   const frameOf = (it) => state.frames[frameIdx(it)].img;

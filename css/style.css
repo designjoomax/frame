@@ -94,11 +94,22 @@ input[type=text]{flex:none;width:52px;height:34px;padding:0;text-align:center;bo
 .empty{margin:0;text-align:center;color:var(--muted);font-size:.85rem}
 .btn:focus-visible,.ico:focus-visible,.tool:focus-visible,.pill:focus-visible,.frame:focus-visible,.link:focus-visible,input[type=text]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
-footer{margin-top:44px}
-footer img{display:block;width:100%;height:auto}
+/* Footer menempel di bawah layar (watermark), halaman diberi ruang agar isi tidak tertutup */
+:root{--footer-space:3.75vw}
+body{padding-bottom:calc(var(--footer-space) + env(safe-area-inset-bottom,0px) + 24px)}
+footer{position:fixed;left:0;right:0;bottom:0;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);pointer-events:none}
+footer img,footer video{display:block;width:100%;height:auto;max-height:none}
+
+/* Popup iklan/notifikasi, aktifkan setelah mengganti gambar placeholder */
+:root{--notice-width:clamp(180px,22vw,320px);--notice-right:20px;--notice-top:92%}
+.site-notice{position:fixed;top:var(--notice-top);right:var(--notice-right);z-index:80;width:var(--notice-width);max-width:calc(100vw - 24px);transform:translateY(-50%);line-height:0}
+.site-notice img{display:block;width:100%;height:auto;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);object-fit:contain}
+.site-notice-close{position:absolute;top:-10px;right:-10px;display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:#141416;color:#fff;font:inherit;font-size:23px;line-height:1;cursor:pointer;box-shadow:0 2px 8px #0005}
+.site-notice-close:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 @media (max-width:1100px){
-  .layout{grid-template-columns:1fr}
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side-r,.editor,.center{min-width:0}
   .frames{display:flex;overflow-x:auto;max-height:none}
   .frame{flex:0 0 96px}
   .drop{min-height:260px}
