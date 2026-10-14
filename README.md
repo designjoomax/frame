@@ -3,48 +3,53 @@
 Website statis (HTML/CSS/JS) untuk menambahkan frame ke foto. Upload banyak foto, pilih frame,
 atur posisi (geser & zoom), opsional Gaussian blur background (default 20 px), lalu download. Hasil otomatis di bawah 2 MB.
 
+## Fitur
+- Layout 3 kolom: Pilih Frame (kiri), area foto (tengah), pengaturan foto terpilih (kanan)
+- Upload banyak foto (JPG, PNG, WEBP, HEIC). 1 foto tampil penuh di tengah, beberapa foto tampil sebagai grid
+- Klik foto di grid untuk mengedit: geser, zoom (-100 s/d +100), rotasi 90°, flip horizontal/vertikal, Gaussian blur background
+- Urutan foto bisa diatur dengan drag di grid, atau tombol panah di panel kanan
+- Hasil dinamai sesuai urutan (`1.png`, `2.png`, ...). ZIP selalu bernama `Frame Joomax by Fixs.Arts.zip`
+- Frame sama untuk semua foto, atau berbeda tiap foto (centang "Frame berbeda tiap foto")
+- Setiap hasil dijaga di bawah 2 MB (PNG dulu, kalau lebih besar otomatis JPG)
+
 ## Struktur
 ```
 joomax-site/
 ├── index.html
-├── css/style.css
+├── update-frames.bat    <- klik setelah mengubah isi assets/frame/
+├── css/style.css        <- semua tampilan & warna (variabel di :root)
 ├── js/
-│   ├── config.js        <- daftar frame & batas ukuran
+│   ├── config.js        <- batas ukuran file (2 MB)
+│   ├── frames.js        <- daftar frame (otomatis)
+│   ├── frames-data.js   <- isi frame untuk mode file:// (otomatis)
 │   ├── app.js
-│   ├── frames-data.js   <- frame yang disematkan (dibuat oleh tools/embed-frames.html)
-│   └── vendor/heic2any.min.js   <- pembaca foto HEIC (iPhone)
-├── tools/embed-frames.html
+│   └── vendor/heic2any.min.js
+├── tools/               <- update-frames.ps1, embed-frames.html
 └── assets/
-    ├── logo.png
-    ├── favicon.png
-    └── frame/
-        └── frame1.png ... frame5.png   <- taruh frame PNG transparan di sini
+    ├── logo.png, favicon.png, footer.png
+    └── frame/           <- taruh frame PNG transparan di sini
 ```
 
-## Fitur
-- Upload banyak foto (JPG, PNG, WEBP, HEIC), geser & zoom (-100 s/d +100, 0 = pas memenuhi frame), Gaussian blur background (rekomendasi 20 px)
-- Frame sama untuk semua foto, atau berbeda tiap foto (centang "Frame berbeda untuk tiap foto")
-- Download satuan, atau semua sekaligus dalam satu `.zip`
-- Setiap hasil dijaga di bawah 2 MB
+## Menambah / mengganti frame (tanpa edit JavaScript)
+1. Taruh file `.png` (transparan, disarankan persegi) di `assets/frame/`.
+2. Klik dua kali **`update-frames.bat`** (Windows). Mac/Linux: buka `tools/embed-frames.html`.
+3. Selesai. Semua `.png` di folder itu otomatis tampil. Tidak ada frame contoh: hanya file asli yang muncul.
 
-## Frame
-Nama file harus `frame1.png` sampai `frame5.png` (sudah didaftarkan di `js/config.js`).
-Pakai PNG transparan, disarankan persegi (mis. 1080x1080). Ukuran hasil mengikuti ukuran frame.
-Kalau file frame belum ada, website memakai frame contoh sementara.
+**Urutan & nama** diatur lewat nama file:
+- `1 Frame Joomax.png` -> tampil "Frame Joomax" di urutan 1
+- `2 Frame Merah.png` -> tampil "Frame Merah" di urutan 2
+- `Frame non Logo.png` (tanpa angka) -> tampil "Frame non Logo", ditaruh setelah yang bernomor
 
-## Deploy
-Push ke GitHub, lalu **Settings > Pages > Deploy from branch (main, /root)**.
+Setiap kali menambah, menghapus, atau mengganti nama frame, jalankan lagi langkah 2.
+Browser tidak bisa membaca isi folder sendiri, jadi langkah itu yang membuat `js/frames.js` (daftar frame)
+dan `js/frames-data.js` (isi frame untuk mode tanpa server).
 
 ## Cara menjalankan
 **A. Tanpa server (double-click `index.html`)**
-Browser memblokir download kalau frame dibaca dari file lokal, jadi frame perlu disematkan dulu:
-1. Buka `tools/embed-frames.html` (double-click).
-2. Pilih semua frame (`frame1.png` - `frame5.png`), klik **Download frames-data.js**.
-3. Simpan ke folder `js/` dan timpa `frames-data.js`.
-4. Buka `index.html`. Ulangi langkah 1-3 setiap kali frame diganti.
+Langsung jalan setelah `update-frames.bat` dijalankan (frame dibaca dari `js/frames-data.js`).
 
 **B. Lewat server / GitHub Pages**
-Di GitHub Pages frame dibaca langsung dari `assets/frame/`, tidak perlu langkah A.
+Di GitHub Pages frame dibaca langsung dari `assets/frame/` (daftar dari `js/frames.js`). `js/frames-data.js` hanya dipakai saat dibuka lewat file://, jadi pengunjung web tidak mengunduhnya.
 Untuk tes lokal pakai `jalankan-lokal.bat`, Live Server (VS Code), atau `npx serve`.
 
 ## Kompres
