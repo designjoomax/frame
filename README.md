@@ -11,7 +11,9 @@ joomax-site/
 ├── js/
 │   ├── config.js        <- daftar frame & batas ukuran
 │   ├── app.js
+│   ├── frames-data.js   <- frame yang disematkan (dibuat oleh tools/embed-frames.html)
 │   └── vendor/heic2any.min.js   <- pembaca foto HEIC (iPhone)
+├── tools/embed-frames.html
 └── assets/
     ├── logo.png
     ├── favicon.png
@@ -20,7 +22,7 @@ joomax-site/
 ```
 
 ## Fitur
-- Upload banyak foto (JPG, PNG, WEBP, HEIC), geser & zoom, Gaussian blur background (rekomendasi 20 px)
+- Upload banyak foto (JPG, PNG, WEBP, HEIC), geser & zoom (-100 s/d +100, 0 = pas memenuhi frame), Gaussian blur background (rekomendasi 20 px)
 - Frame sama untuk semua foto, atau berbeda tiap foto (centang "Frame berbeda untuk tiap foto")
 - Download satuan, atau semua sekaligus dalam satu `.zip`
 - Setiap hasil dijaga di bawah 2 MB
@@ -33,13 +35,17 @@ Kalau file frame belum ada, website memakai frame contoh sementara.
 ## Deploy
 Push ke GitHub, lalu **Settings > Pages > Deploy from branch (main, /root)**.
 
-## Test di komputer
-JANGAN buka `index.html` dengan double-click (alamat diawali `file://`). Browser menganggap frame
-sebagai file asing sehingga download diblokir ("Tainted canvas"). Pilih salah satu:
-- Klik dua kali `jalankan-lokal.bat` (Windows, perlu Python atau Node.js), lalu buka http://localhost:8000
-- VS Code + ekstensi Live Server, klik kanan `index.html` > Open with Live Server
-- `npx serve` atau `python -m http.server`
-Di GitHub Pages (https) tidak ada masalah ini.
+## Cara menjalankan
+**A. Tanpa server (double-click `index.html`)**
+Browser memblokir download kalau frame dibaca dari file lokal, jadi frame perlu disematkan dulu:
+1. Buka `tools/embed-frames.html` (double-click).
+2. Pilih semua frame (`frame1.png` - `frame5.png`), klik **Download frames-data.js**.
+3. Simpan ke folder `js/` dan timpa `frames-data.js`.
+4. Buka `index.html`. Ulangi langkah 1-3 setiap kali frame diganti.
+
+**B. Lewat server / GitHub Pages**
+Di GitHub Pages frame dibaca langsung dari `assets/frame/`, tidak perlu langkah A.
+Untuk tes lokal pakai `jalankan-lokal.bat`, Live Server (VS Code), atau `npx serve`.
 
 ## Kompres
 PNG dicoba dulu. Kalau di atas 2 MB, otomatis jadi JPEG dengan kualitas tertinggi yang masih muat,

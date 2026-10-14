@@ -82,3 +82,6 @@ section:first-of-type h2{text-align:center}
 .fp img{display:block;width:100%;height:100%;object-fit:contain;border-radius:4px}
 .fp[aria-checked="true"]{border-color:var(--accent)}
 .fp:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.zoom input[type=text]{flex:none;width:52px;height:34px;padding:0;text-align:center;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink);font:inherit}
+.zoom input[type=text]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}

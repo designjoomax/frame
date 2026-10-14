@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sematkan Frame - JOOMAX SITE</title>
+<style>
+  body{margin:0;border-top:4px solid #e60020;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#fafafa;color:#1b1b1d}
+  main{max-width:640px;margin:0 auto;padding:32px 20px}
+  h1{margin:0 0 8px;font-size:1.6rem}
+  p,li{color:#555}
+  .drop{display:block;text-align:center;padding:28px 16px;border:2px dashed #d5d5da;border-radius:12px;cursor:pointer;margin:20px 0}
+  .drop:hover,.drop.over{border-color:#e60020}
+  ul.files{list-style:none;padding:0;display:grid;gap:8px}
+  ul.files li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e4e4e8;border-radius:10px;padding:8px 12px;color:#1b1b1d}
+  ul.files img{width:40px;height:40px;object-fit:contain}
+  ul.files span{margin-left:auto;color:#777;font-size:.85rem}
+  button{border:0;border-radius:8px;padding:11px 18px;font:inherit;font-weight:600;background:#e60020;color:#fff;cursor:pointer}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .note{font-size:.88rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Sematkan frame</h1>
+  <p>Supaya website bisa dibuka langsung (double-click <code>index.html</code>) dan tetap bisa download, tanpa server.</p>
+  <ol>
+    <li>Pilih semua file frame (<code>frame1.png</code> sampai <code>frame5.png</code>).</li>
+    <li>Klik <strong>Download frames-data.js</strong>.</li>
+    <li>Simpan ke folder <code>js/</code> dan timpa <code>frames-data.js</code> yang lama.</li>
+  </ol>
+  <label class="drop" id="drop" for="f"><strong>Pilih file frame</strong> atau tarik ke sini</label>
+  <input id="f" type="file" accept="image/png" multiple hidden>
+  <ul class="files" id="list"></ul>
+  <button id="go" type="button" disabled>Download frames-data.js</button>
+  <p class="note">Ulangi langkah ini setiap kali ada frame yang diganti. Nama file harus sama dengan yang didaftarkan di <code>js/config.js</code>.</p>
+</main>
+<script>
+  const data = {}, list = document.getElementById("list"), go = document.getElementById("go"), drop = document.getElementById("drop");
+  const read = (f) => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
+  async function add(files) {
+    for (const f of [...files].filter((x) => /\.png$/i.test(x.name))) {
+      data[f.name] = await read(f);
+      const li = document.createElement("li");
+      li.innerHTML = `<img alt=""><strong></strong><span>${(f.size / 1024).toFixed(0)} KB</span>`;
+      li.querySelector("img").src = data[f.name]; li.querySelector("strong").textContent = f.name;
+      list.appendChild(li);
+    }
+    go.disabled = !Object.keys(data).length;
+  }
+  document.getElementById("f").onchange = (e) => { const p = [...e.target.files]; e.target.value = ""; add(p); };
+  ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", (e) => add([...e.dataTransfer.files]));
+  go.onclick = () => {
+    const js = "// Dibuat oleh tools/embed-frames.html\nwindow.JOOMAX_FRAME_DATA = " + JSON.stringify(data) + ";\n";
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([js], { type: "text/javascript" }));
+    a.download = "frames-data.js"; a.click();
+  };
+</script>
+</body>
+</html>

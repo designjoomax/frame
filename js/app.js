@@ -1,7 +1,7 @@
 (() => {
   const { frames: FRAME_LIST, maxBytes: MAX } = window.JOOMAX_CONFIG;
   const $ = (s) => document.querySelector(s);
-  const MAXZ = 4, PREVIEW_W = 640, BLUR_DEFAULT = 20, BLUR_MAX = 100;
+  const MAXZ = 4, MIN_ZOOM = 0.2, PREVIEW_W = 640, BLUR_DEFAULT = 20, BLUR_MAX = 100;
   const HEIC_SRCS = ["js/vendor/heic2any.min.js", "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"];
   const state = { frames: [], current: 0, per: false, items: [] };
   const frameIdx = (it) => (state.per ? it.frameIdx : state.current);
@@ -17,6 +17,9 @@
   const toBlob = (c, type, q) => new Promise((res, rej) => { try { c.toBlob(res, type, q); } catch (e) { rej(e); } });
   const fmt = (b) => (b / 1024 / 1024).toFixed(2) + " MB";
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  // Skala zoom: -100 (kecil, 0.2x) .. 0 (pas memenuhi frame) .. +100 (besar, 4x)
+  const fromZ = (z) => (z >= 0 ? Math.pow(MAXZ, z / 100) : Math.pow(MIN_ZOOM, -z / 100));
+  const toZ = (f) => (f >= 1 ? (100 * Math.log(f)) / Math.log(MAXZ) : (-100 * Math.log(f)) / Math.log(MIN_ZOOM));
   const newCanvas = (w, h) => Object.assign(document.createElement("canvas"), { width: w, height: h });
 
   // Frame contoh otomatis kalau file PNG belum ada
@@ -33,16 +36,19 @@
   }
 
   // ---------- Frame ----------
+  // Frame yang sudah disematkan (js/frames-data.js) dipakai lebih dulu, sehingga jalan tanpa server
+  const FRAME_DATA = window.JOOMAX_FRAME_DATA || {};
+  const frameSrc = (src) => FRAME_DATA[src.split("/").pop()] || src;
   async function loadFrames() {
     state.frames = await Promise.all(FRAME_LIST.map(async (f, i) => {
-      try { return { name: f.name, img: await loadImage(f.src), src: f.src }; }
+      try { const src = frameSrc(f.src); return { name: f.name, img: await loadImage(src), src }; }
       catch { console.warn("Frame tidak ditemukan, pakai contoh:", f.src);
         const src = placeholderFrame(i); return { name: f.name, img: await loadImage(src), src }; }
     }));
     // Frame dari file:// membuat canvas "tainted" sehingga download diblokir browser. Beri peringatan jelas.
     const bad = state.frames.some((f) => { try { const g = newCanvas(1, 1).getContext("2d"); g.drawImage(f.img, 0, 0, 1, 1); g.getImageData(0, 0, 1, 1); return false; } catch { return true; } });
     if (bad) { const w = $("#warn"); w.hidden = false;
-      w.textContent = "Download tidak akan jalan: browser memblokir frame karena halaman dibuka lewat " + location.protocol + "// . Jalankan lewat Live Server (VS Code), npx serve, atau langsung di GitHub Pages."; }
+      w.textContent = "Download diblokir browser karena frame dibaca dari file lokal. Solusi tanpa server: buka tools/embed-frames.html, pilih frame1-5.png, lalu simpan hasilnya sebagai js/frames-data.js. Atau jalankan lewat server / GitHub Pages."; }
     const box = $("#frames");
     state.frames.forEach((f, i) => {
       const b = document.createElement("button");
@@ -107,7 +113,7 @@
   function fit(it) {
     const f = frameOf(it), W = f.naturalWidth, H = f.naturalHeight;
     const { bw, bh, s0, minZ } = geom(it, W, H);
-    it.zoom = clamp(it.zoom, minZ, MAXZ);
+    it.zoom = clamp(it.zoom, MIN_ZOOM, MAXZ);
     const mx = Math.abs(bw * s0 * it.zoom - W) / 2 / W, my = Math.abs(bh * s0 * it.zoom - H) / 2 / H;
     it.ox = clamp(it.ox, -mx, mx); it.oy = clamp(it.oy, -my, my);
     return minZ;
@@ -248,11 +254,13 @@
   }
 
   function refresh(it) {
-    const minZ = fit(it), f = frameOf(it);
+    fit(it); const f = frameOf(it);
     const cv = it.canvas, W = PREVIEW_W, H = Math.round(PREVIEW_W * f.naturalHeight / f.naturalWidth);
     if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
     draw(cv.getContext("2d"), it, f, W, H, true);
-    Object.assign(it.slider, { min: minZ, max: MAXZ, step: 0.01, value: it.zoom });
+    const z = toZ(it.zoom);
+    Object.assign(it.slider, { min: -100, max: 100, step: 1, value: z });
+    if (document.activeElement !== it.zNum) it.zNum.value = Math.round(z);
     it.v++;
     clearTimeout(it.timer);
     it.meta.textContent = "Memproses...";
@@ -264,8 +272,9 @@
     d.className = "card";
     d.innerHTML = `<div class="stage" tabindex="0" aria-label="Area foto: geser dengan drag atau panah, zoom dengan + dan -"><canvas></canvas></div>
       <div class="zoom"><button class="ico" type="button" data-z="-" aria-label="Zoom out">−</button>
-      <input type="range" class="zr" aria-label="Zoom"><button class="ico" type="button" data-z="+" aria-label="Zoom in">+</button>
-      <button class="ico" type="button" data-r>Reset</button></div>
+      <input type="range" class="zr" aria-label="Zoom, -100 sampai 100"><button class="ico" type="button" data-z="+" aria-label="Zoom in">+</button>
+      <input type="text" class="zn" inputmode="decimal" aria-label="Nilai zoom (-100 sampai 100)" title="Zoom: -100 sampai 100">
+      <button class="ico" type="button" data-r aria-label="Reset posisi dan zoom" title="Reset posisi dan zoom">↺</button></div>
       <label class="chk"><input type="checkbox" class="bl-on"> Gaussian blur (background)</label>
       <div class="blurctl" hidden><input type="range" class="bl-r" min="0" max="${BLUR_MAX}" step="1" aria-label="Radius blur">
       <input type="text" class="bl-n" inputmode="decimal" aria-label="Radius blur dalam px"><span>px</span>
@@ -276,7 +285,7 @@
     d.querySelector(".name").textContent = it.name;
     const stage = d.querySelector(".stage");
     const rng = d.querySelector(".bl-r"), num = d.querySelector(".bl-n"), ctl = d.querySelector(".blurctl");
-    Object.assign(it, { el: d, canvas: d.querySelector("canvas"), slider: d.querySelector(".zr"), meta: d.querySelector(".meta") });
+    Object.assign(it, { el: d, canvas: d.querySelector("canvas"), slider: d.querySelector(".zr"), zNum: d.querySelector(".zn"), meta: d.querySelector(".meta") });
     rng.value = num.value = it.radius;
     const rec = d.querySelector("[data-rec]"), syncRec = () => rec.classList.toggle("on", it.radius === BLUR_DEFAULT);
     syncRec();
@@ -313,7 +322,10 @@
       else return;
       e.preventDefault(); refresh(it);
     });
-    it.slider.oninput = () => { it.zoom = +it.slider.value; refresh(it); };
+    it.slider.oninput = () => { it.zoom = fromZ(+it.slider.value); refresh(it); };
+    it.zNum.oninput = () => { const n = parseFloat(it.zNum.value.replace(",", ".")); if (isFinite(n)) { it.zoom = fromZ(clamp(n, -100, 100)); refresh(it); } };
+    it.zNum.onchange = () => { it.zNum.value = Math.round(toZ(it.zoom)); };
+    it.zNum.onkeydown = (e) => { if (e.key === "Enter") it.zNum.blur(); };
     d.querySelectorAll("[data-z]").forEach((b) => b.onclick = () => { it.zoom *= b.dataset.z === "+" ? 1.15 : 1 / 1.15; refresh(it); });
     d.querySelector("[data-r]").onclick = () => { Object.assign(it, { zoom: 1, ox: 0, oy: 0 }); refresh(it); };
 
