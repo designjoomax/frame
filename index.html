@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header class="top">
+<header class="top" id="top">
   <span class="logo-wrap"><img class="logo" src="assets/logo.png" alt="Joomax Teknologi Indonesia"></span>
 </header>
 
@@ -90,11 +90,52 @@
   <img src="assets/PopUp/Pop1.png" alt="Iklan atau notifikasi">
 </aside>
 
-<footer>
-  <img src="assets/footer.png" alt="Website by Fixs Arts">
-  <!-- Untuk GIF, ubah src gambar di atas ke file .gif. Untuk video, ganti img dengan:
-  <video src="assets/Footer.mp4" autoplay muted loop playsinline aria-label="Iklan Joomax"></video>
-  -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a class="footer-brand" href="#top" aria-label="Joomax Teknologi Indonesia, kembali ke atas">
+      <img src="assets/logo.png" alt="Joomax Teknologi Indonesia">
+    </a>
+
+    <nav class="footer-links" aria-label="Navigasi aplikasi">
+      <h2>Aplikasi</h2>
+      <a href="#frames">Pilih frame</a>
+      <a href="#drop">Unggah foto</a>
+      <a href="#bulk">Unduh hasil</a>
+    </nav>
+
+    <div class="footer-links">
+      <h2>Joomax</h2>
+      <span>Teknologi Indonesia</span>
+      <span>Frame Image</span>
+    </div>
+
+    <nav class="footer-links" aria-label="Bantuan">
+      <h2>Bantuan</h2>
+      <a href="#drop">Mulai menggunakan</a>
+      <a href="#stage">Area kerja</a>
+    </nav>
+
+    <div class="footer-note">
+      <p>Solusi teknologi untuk kebutuhan digital Anda.</p>
+      <small>Joomax dan logo Joomax adalah identitas Joomax Teknologi Indonesia. Hak cipta dilindungi.</small>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <span>Kebijakan Privasi</span>
+        <span>Ketentuan Penggunaan</span>
+        <span>© 2026 Joomax Teknologi Indonesia</span>
+      </div>
+      <label class="country-select">
+        <span class="country-flag" aria-hidden="true">🇮🇩</span>
+        <select aria-label="Pilih negara">
+          <option selected>Indonesia</option>
+          <option>United States</option>
+          <option>Singapore</option>
+        </select>
+      </label>
+    </div>
+  </div>
 </footer>
 
 <script src="js/config.js"></script>
