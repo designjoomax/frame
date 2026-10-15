@@ -51,9 +51,11 @@
     if (bad) { const w = $("#warn"); w.hidden = false;
       w.textContent = "Download diblokir browser karena frame dibaca dari file lokal. Klik dua kali update-frames.bat (atau buka tools/embed-frames.html), atau jalankan lewat server / GitHub Pages."; }
     state.frames.forEach((f, i) => {
-      const b = document.createElement("button"), im = new Image();
-      b.type = "button"; b.className = "frame"; b.title = f.name; b.setAttribute("aria-label", f.name); b.setAttribute("role", "radio");
-      im.alt = ""; im.src = f.src; b.appendChild(im);
+      const b = document.createElement("button"), im = new Image(), label = document.createElement("span");
+      const fmtName = displayFrameName(f.name, f.src || f.file);
+      b.type = "button"; b.className = "frame"; b.title = fmtName; b.setAttribute("aria-label", fmtName); b.setAttribute("role", "radio");
+      im.alt = ""; im.src = f.src; label.className = "frame-name"; label.textContent = fmtName;
+      b.appendChild(im); b.appendChild(label);
       b.onclick = () => {
         state.current = i;
         if (state.per) { if (state.sel) { state.sel.frameIdx = i; refresh(state.sel); } }
@@ -67,6 +69,11 @@
   function syncFrameList() {
     const idx = state.per && state.sel ? state.sel.frameIdx : state.current;
     document.querySelectorAll("#frames .frame").forEach((b, j) => b.setAttribute("aria-checked", j === idx));
+  }
+  function displayFrameName(name, fallback = "") {
+    const raw = (name || fallback || "").replace(/\.[^/.]+$/, "").trim();
+    const cleaned = raw.replace(/^\s*(\d+)\s*([\s._-]+)\s*/, "").trim();
+    return cleaned || raw || "Frame";
   }
 
   // ---------- Blur ----------
