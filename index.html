@@ -165,8 +165,39 @@
 <script src="js/app.js"></script>
 
   
-<!-- Music widget (floating) <!--
-<!-- <script src="https://cdn.jsdelivr.net/gh/fixsarts/MusicWidgets@main/music-player.js" defer></script> <!--
+<!-- Music widget (floating) -->
+<!-- <script src="https://cdn.jsdelivr.net/gh/fixsarts/MusicWidgets@main/music-player.js" defer></script> -->
+
+<!-- Chat widget (floating) -->  
+<script src="https://fixsarts.github.io/widgets/Chat/Model1/dist/chat.js"></script>
+<script>
+  FixsArtsChat.init({
+    "theme": "light",
+    "layout": {
+      "panelWidth": 374,
+      "panelHeight": 500
+    },
+    "profile": {
+      "size": 51,
+      "zoom": 1.5
+    },
+    "welcome": {
+      "message": "Ada yang bisa kami bantu?"
+    },
+    "button": {
+      "icon": "chat-dots",
+      "gradient": {
+        "from": "#1a70f9",
+        "to": "#5713f6"
+      }
+    },
+    "appearance": {
+      "radius": 20,
+      "accent": "#1a70f9",
+      "accent2": "#5713f6"
+    }
+  });
+</script>
 
 
 <!-- Cursor widget-->
