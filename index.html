@@ -136,29 +136,6 @@
 
 
   
-<!-- Flip Clock -->
-  
-<script src="https://cdn.jsdelivr.net/gh/fixsarts/widgets@main/Flip%20Clock/flip-clock.js" defer></script>
-
-<div data-fixs-flipclock
-     data-theme="light"
-     data-card="#ff0024"
-     data-text="#ffffff"
-     data-border-color="#e8e8e8"
-     data-hour12="false"
-     data-size="50"
-     data-locale="id-ID"
-     data-position="bottom-right"
-     data-radius="8"
-     data-pad-x="8"
-     data-pad-y="6"
-     data-border="true"
-     data-date-uppercase="true"
-     data-gap-digit="4"
-     data-gap-date="7"></div>
-
-
-  
 <!-- Aplikasi Frame Image (repo ini) -->
 <script src="js/config.js"></script>
 <script src="js/frames.js"></script>
@@ -168,6 +145,30 @@
 <!-- Music widget (floating) -->
 <!-- <script src="https://cdn.jsdelivr.net/gh/fixsarts/MusicWidgets@main/music-player.js" defer></script> -->
 
+  
+<!-- Flip Clock -->
+<script src="https://cdn.jsdelivr.net/gh/fixsarts/widgets@main/Flip%20Clock/flip-clock.js" defer></script>
+
+<div data-fixs-flipclock
+     data-theme="dark"
+     data-bg="#ffffff"
+     data-card="#d3001d"
+     data-text="#ffebeb"
+     data-divider="#ffffff"
+     data-border-color="#e6e6e6"
+     data-show="hours,minutes,date"
+     data-hour12="false"
+     data-size="55"
+     data-locale="id-ID"
+     data-position="top-right"
+     data-radius="12"
+     data-pad-y="9"
+     data-border="true"
+     data-date-day="numeric"
+     data-date-uppercase="true"
+     data-gap-date="5"></div>
+  
+  
 <!-- Chat widget (floating) -->  
 <script src="https://fixsarts.github.io/widgets/Chat/Model1/dist/chat.js"></script>
 <script>
@@ -186,9 +187,13 @@
     },
     "button": {
       "icon": "chat-dots",
+      "iconSize": 60,
       "gradient": {
         "from": "#1a70f9",
         "to": "#5713f6"
+      },
+      "badge": {
+        "enabled": false
       }
     },
     "appearance": {
@@ -199,7 +204,7 @@
   });
 </script>
 
-
+  
 <!-- Cursor widget-->
 <script
   src="https://fixsarts.github.io/cursor/cursor.js"
