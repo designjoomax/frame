@@ -17,19 +17,32 @@
 <script>
   FixsArtsWelcome.init({
     "theme": "dark",
-    "title": "Selamat datang di Joomax Frame",
+    "title": "Joomax Frame",
     "subtitle": "Welcome",
     "description": "Creative Solutions for Every Vision.",
+    "info": "Fixs.Arts Studio",
     "image": {
-      "src": "https://raw.githubusercontent.com/fixsarts/widgets/main/Pop%20up/Model1/assets/images/Card%20for%20Linktree.jpg",
-      "height": 200,
-      "radius": 15
+      "src": "https://cdn.jsdelivr.net/gh/fixsarts/widgets@main/Pop%20up/Model1/assets/images/Card%20for%20Linktree.jpg"
+    },
+    "show": {
+      "image": false
+    },
+    "text": {
+      "subtitle": {
+        "color": "#7452ff"
+      },
+      "description": {
+        "weight": 500
+      },
+      "info": {
+        "color": "#9393a5"
+      }
     },
     "buttons": [
       {
-        "label": "Start",
-        "href": "#",
-        "color": "#3326ed",
+        "label": "Mulai",
+        "href": "#mulai",
+        "color": "#7c5cff",
         "textColor": "#ffffff",
         "variant": "solid",
         "size": "md",
@@ -38,18 +51,24 @@
       },
       {
         "label": "Pelajari lebih lanjut",
-        "href": "https://www.instagram.com/fixs.arts",
+        "href": "#https://www.instagram.com/fixs.arts/",
         "color": "#2f7bff",
         "textColor": "#ffffff",
         "variant": "outline",
         "size": "md",
         "radius": 12,
-        "close": true
+        "close": false
       }
     ],
     "audio": {
+      "src": "https://cdn.jsdelivr.net/gh/fixsarts/widgets@main/Pop%20up/Model1/assets/audio/Welcome%20to%20Fixs%20Arts%20Studio.mp3"
+      "volume": 0.8,
       "loop": true,
       "controls": false
+    },
+    "credit": {
+      "enabled": false,
+      "text": "Fixs.Arts"
     }
   });
 </script>
