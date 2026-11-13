@@ -148,10 +148,43 @@
 <!-- Music widget (floating) -->
 <!-- <script src="https://cdn.jsdelivr.net/gh/fixsarts/MusicWidgets@main/music-player.js" defer></script> -->
 
-<!-- Support --> 
-  
-<div id="support-widget"></div>
-<script src="https://cdn.jsdelivr.net/gh/fixsarts/widgets@main/Support/js/support-config.js"></script>
+<!-- Support Widget -->
+<script>
+window.SUPPORT_CONFIG = {
+  "orientation": "portrait",
+  "position": {
+    "mode": "floating",
+    "corner": "bottom-left",
+    "offsetX": 14,
+    "offsetY": 61
+  },
+  "text": {
+    "description": "Dukung Pengembangan & Kreativitas",
+    "thanks": "Thanks! Dukunganmu sangat berarti untuk Pengembangan Website ini."
+  },
+  "launcherButton": {
+    "background": "#264ce3"
+  },
+  "closeButton": {
+    "show": true,
+    "remember": "never",
+    "alignIcon": false,
+    "size": 30,
+    "iconSize": 20,
+    "offsetX": 21,
+    "offsetY": 19,
+    "background": "#f5f8ff",
+    "color": "#7784b6"
+  },
+  "icon": {
+    "name": "qr-code"
+  },
+  "size": {
+    "scale": 60,
+    "width": 240
+  }
+};
+</script>
 <script src="https://cdn.jsdelivr.net/gh/fixsarts/widgets@main/Support/js/support-widget.js"></script>
   
 <!-- Flip Clock -->
